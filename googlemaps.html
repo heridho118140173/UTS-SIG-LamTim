@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.0/dist/leaflet.css" />
+<link rel="stylesheet" href="assets/css/leaflet-search.css" />
+<link rel="stylesheet" href="assets/css/style.css" />
+
+<style>
+.search-input {
+	font-family:Courier
+}
+.search-input,
+.leaflet-control-search {
+	max-width:400px;
+}
+</style>
+</head>
+
+<body>
+	<h3><center>Google Maps</center></h3>
+
+	<center><img src="assets/img/Heridhomap.png", width="899" /></center>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.3.0/dist/leaflet.js"></script>
+<script src="assets/js/leaflet-search.js"></script>
+<script>
+
+	var map = L.map('map', {
+		zoom: 10,
+		center: L.latLng([-4.582985, 105.388671]),
+		layers: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+	});
+
+	L.marker([-4.582985, 105.388671]).addTo(map)
+
+	L.control.search({
+		url: 'https://nominatim.openstreetmap.org/search?format=json&q={s}',
+		propertyName: 'display_name',
+		jsonpParam: 'json_callback',		
+		propertyLoc: ['lat','lon'],
+		autoCollapse: true,
+		autoType: false,
+		minLength: 2,
+		moveToLocation: function(latlng, title, map) {
+			//https://wiki.openstreetmap.org/wiki/Shortlink
+
+			var url = L.Util.template('https://www.google.com/maps/search/{lat},{lon}/@{lat},{lon}', {
+				lat: latlng.lat,
+				lon: latlng.lng,
+				zoom: map.getZoom()
+			});
+
+			location.href = url;
+		}
+	})
+	.addTo(map);
+
+</script>
+
+<script type="text/javascript" src="/labs-common.js"></script>
+
+<footer style="background:rgb(121, 216, 245); color: whitesmoke; padding: 10px; text-align: center;">
+    <p><b>@Heridho</b></p>
+  </footer>
+
+</body>
+</html>
